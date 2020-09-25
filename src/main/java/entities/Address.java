@@ -3,42 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dtos;
+package entities;
 
-import entities.Person;
+import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author ckfol
  */
-public class PersonDTO {
+@Entity
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String fName;
-    private String lName;
-    private String phone;
     private String street;
     private String city;
     private int zip;
-
     
-    public PersonDTO(Person p) {
-        this.fName = p.getFirstName();
-        this.lName = p.getLastName();
-        this.phone = p.getPhone();
-        this.id = p.getP_id();
+    @OneToMany(mappedBy = "address")
+    private List<Person> persons;
 
+    public Address() {
     }
 
-    public PersonDTO(String fName, String lName, String phone, String street, String city, int zip) {
-        this.fName = fName;
-        this.lName = lName;
-        this.phone = phone;
+    public Address(String street, String city, int zip) {
         this.street = street;
         this.city = city;
         this.zip = zip;
     }
-
-    
 
     public Integer getId() {
         return id;
@@ -46,30 +48,6 @@ public class PersonDTO {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getfName() {
-        return fName;
-    }
-
-    public void setfName(String fName) {
-        this.fName = fName;
-    }
-
-    public String getlName() {
-        return lName;
-    }
-
-    public void setlName(String lName) {
-        this.lName = lName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getStreet() {
@@ -96,5 +74,16 @@ public class PersonDTO {
         this.zip = zip;
     }
 
+    public List<Person> getPerson() {
+        return persons;
+    }
+    
+    public void addPerson(Person person) {
+        persons.add(person);
+        if(person != null){
+            person.setAddress(this);
+        }
+    }
+    
     
 }
